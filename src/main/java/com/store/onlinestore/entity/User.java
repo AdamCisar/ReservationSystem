@@ -1,4 +1,4 @@
-package com.store.onlinestore.entities;
+package com.store.onlinestore.entity;
 
 import java.util.Collection;
 
@@ -41,11 +41,12 @@ public class User {
           name = "role_id", referencedColumnName = "id")) 
     private Collection<Role> roles;
 
-	public User(String firstName, String lastName, String email, String password, Collection<Role> roles) {
+	public User(String firstName, String lastName, String email, String password, boolean enabled,Collection<Role> roles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.enabled = enabled;
 		this.roles = roles;
 	}
     

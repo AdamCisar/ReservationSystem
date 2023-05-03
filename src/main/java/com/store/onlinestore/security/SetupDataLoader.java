@@ -10,12 +10,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.store.onlinestore.entities.Privilege;
-import com.store.onlinestore.entities.Role;
-import com.store.onlinestore.entities.User;
-import com.store.onlinestore.repositories.PrivilegeRepository;
-import com.store.onlinestore.repositories.RoleRepository;
-import com.store.onlinestore.repositories.UserRepository;
+import com.store.onlinestore.entity.Privilege;
+import com.store.onlinestore.entity.Role;
+import com.store.onlinestore.entity.User;
+import com.store.onlinestore.repository.PrivilegeRepository;
+import com.store.onlinestore.repository.RoleRepository;
+import com.store.onlinestore.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -56,6 +56,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setPassword(passwordEncoder.encode("test"));
         user.setEmail("test@test.com");
         user.setRoles(Arrays.asList(adminRole));
+        user.setEnabled(true);
         userRepository.save(user);
 
         alreadySetup = true;

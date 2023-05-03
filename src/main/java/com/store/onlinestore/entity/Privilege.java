@@ -1,4 +1,4 @@
-package com.store.onlinestore.entities;
+package com.store.onlinestore.entity;
 
 import java.util.Collection;
 

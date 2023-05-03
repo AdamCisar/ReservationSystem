@@ -1,12 +1,15 @@
-package com.store.onlinestore.controllers;
+package com.store.onlinestore.controller;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.store.onlinestore.services.RegistrationService;
+import com.store.onlinestore.dto.UserDto;
+import com.store.onlinestore.service.RegistrationService;
 
+@RequestMapping("/api")
 @RestController
 public class RegistrationController {
 
@@ -16,12 +19,9 @@ public class RegistrationController {
 		this.registrationService = registrationService;
 	}
 	
-	@GetMapping(path = "/register")
-	public ModelAndView register(Model model) {
-//		return registrationService.register(userDto);
-		ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("view.html");
-        return modelAndView;
+	@PostMapping(path = "/register")
+	public String register(@RequestBody UserDto userDto) {
+		return registrationService.register(userDto);
 	}
 	
 	@GetMapping(path = "/admin")
