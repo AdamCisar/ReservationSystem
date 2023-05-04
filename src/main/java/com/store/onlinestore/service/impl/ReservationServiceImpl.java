@@ -1,5 +1,8 @@
 package com.store.onlinestore.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,25 @@ public class ReservationServiceImpl implements ReservationService{
 		reservationRepository.save(reservation);
 		
 		return "reservation updated";
+	}
+
+	@Override
+	public String delete(Long id) {
+		Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+		reservationRepository.delete(reservation);
+		return "reservation deleted";
+	}
+
+	@Override
+	public List<Reservation> getNotOccupiedReservations() {
+		
+		return reservationRepository.findAll().stream().filter(reservation -> reservation.getUser() == null).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Reservation> getAllReservationsOfUser(Long userId) {
+
+		return reservationRepository.findByUserId(userId); 
 	}
 	
 
