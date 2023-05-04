@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.store.onlinestore.dto.ReservationDto;
@@ -35,20 +38,38 @@ public class ReservationServiceImpl implements ReservationService{
 	}
 
 	@Override
-	public String update(ReservationDto reservationDto) {
-		Reservation reservation = reservationRepository.findById(reservationDto.getReservationId()).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
-		User user = userRepository.findById(reservationDto.getUserId()).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+	public String update(Long id, Authentication authentication) {
+		Reservation reservation = getReservationById(id);
 
-		reservation.setUser(user);
+		reservation.setUser(getCurrentUser(authentication));
 		reservationRepository.save(reservation);
 		
 		return "reservation updated";
 	}
 
 	@Override
-	public String delete(Long id) {
-		Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+	public String delete(Long id, Authentication authentication) {
+		//GET CURRENT USER AND RESERVATION FROM DATABASE 
+		User currentUser = getCurrentUser(authentication);
+		Reservation reservation = getReservationById(id);
+		
+		//CHECK IF CURRENT USER IS ADMIN
+		boolean isAdmin = currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+		
+		//VALIDATE
+		var userReservationId = reservation.getUser();
+		
+		if(isAdmin) {
+			reservationRepository.delete(reservation);
+			return "reservation deleted";
+		}
+		
+		if(!currentUser.equals(userReservationId) || userReservationId == null) {
+			throw new AccessDeniedException("You are not allowed to delete this reservation!");
+		}
+		
 		reservationRepository.delete(reservation);
+
 		return "reservation deleted";
 	}
 
@@ -59,11 +80,21 @@ public class ReservationServiceImpl implements ReservationService{
 	}
 
 	@Override
-	public List<Reservation> getAllReservationsOfUser(Long userId) {
+	public List<Reservation> getAllReservationsOfUser(Authentication authentication) {
 
-		return reservationRepository.findByUserId(userId); 
+		return reservationRepository.findByUserId(getCurrentUser(authentication).getId()); 
 	}
 	
+	private Reservation getReservationById(Long id) {
+		
+		return reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+	}
+	
+	private User getCurrentUser(Authentication authentication) {
+		 
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		 return userRepository.findByEmail(userDetails.getUsername());
+	}
 
 
 }

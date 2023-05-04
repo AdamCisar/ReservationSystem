@@ -3,6 +3,7 @@ package com.store.onlinestore.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +29,14 @@ public class ReservationController {
 		return reservationService.save(reservationDto);
 	}
 	
-	@PutMapping(path = "/{userId}")
-	public String updateReservation(@RequestBody ReservationDto reservationDto)  {
-		return reservationService.update(reservationDto);
-	}
+	@PutMapping(path = "/{id}")
+	public String updateReservation(@PathVariable Long id, Authentication authentication)  {
+		return reservationService.update(id, authentication);
+		}
 	
-	@DeleteMapping(path = "/admin/{id}")
-	public String delete(@PathVariable Long id)  {
-		return reservationService.delete(id);
+	@DeleteMapping(path = "/{id}")
+	public String delete(@PathVariable Long id, Authentication authentication)  {
+		return reservationService.delete(id, authentication);
 	}
 	
 	@GetMapping
@@ -43,8 +44,8 @@ public class ReservationController {
 		return reservationService.getNotOccupiedReservations();
 	}
 	
-	@GetMapping("/{userId}")
-	public List<Reservation> getAllReservationsOfUser(@PathVariable Long userId) {
-		return reservationService.getAllReservationsOfUser(userId);
+	@GetMapping("/userReservations")
+	public List<Reservation> getAllReservationsOfUser(Authentication authentication) {
+		return reservationService.getAllReservationsOfUser(authentication);
 	}
 }
