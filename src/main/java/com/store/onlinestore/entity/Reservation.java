@@ -2,6 +2,8 @@ package com.store.onlinestore.entity;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -27,15 +29,15 @@ public class Reservation {
     private Date reservationDate;
     private Time reservationTime;
 
-    @ManyToOne
+	@ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
 
-	public Reservation(Date reservationDate, Time reservationTime, User user) {
+    public Reservation(Date reservationDate, Time reservationTime, User user) {
 		this.reservationDate = reservationDate;
 		this.reservationTime = reservationTime;
 		this.user = user;
 	}
-    
+	    
 }

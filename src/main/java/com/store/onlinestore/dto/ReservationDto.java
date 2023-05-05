@@ -3,8 +3,6 @@ package com.store.onlinestore.dto;
 import java.sql.Date;
 import java.sql.Time;
 
-import com.store.onlinestore.entity.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
