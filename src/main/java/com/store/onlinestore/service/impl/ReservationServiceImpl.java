@@ -38,7 +38,7 @@ public class ReservationServiceImpl implements ReservationService{
 	}
 
 	@Override
-	public String update(Long id, Authentication authentication) {
+	public String updateUserToReservation(Long id, Authentication authentication) {
 		Reservation reservation = getReservationById(id);
 
 		reservation.setUser(getCurrentUser(authentication));
@@ -46,7 +46,23 @@ public class ReservationServiceImpl implements ReservationService{
 		
 		return "reservation updated";
 	}
+	
+	@Override
+	public String deleteUserFromReservation(Long id, Authentication authentication) {
+		//GET CURRENT USER AND RESERVATION FROM DATABASE 
+		User currentUser = getCurrentUser(authentication);
+		Reservation reservation = getReservationById(id);
+		var userReservationId = reservation.getUser();
+		//VALIDATE
+		if(!currentUser.equals(userReservationId) || userReservationId == null) {
+			throw new AccessDeniedException("You are not allowed to delete this reservation!");
+		}
+		reservation.setUser(null);
+		reservationRepository.save(reservation);
 
+		return "user is deleted from reservation";
+	}
+	
 	@Override
 	public String delete(Long id, Authentication authentication) {
 		//GET CURRENT USER AND RESERVATION FROM DATABASE 

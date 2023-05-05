@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,12 +29,17 @@ public class ReservationController {
 		return reservationService.save(reservationDto);
 	}
 	
-	@PutMapping(path = "/{id}")
-	public String updateReservation(@PathVariable Long id, Authentication authentication)  {
-		return reservationService.update(id, authentication);
-		}
+	@PatchMapping(path = "/update-user/{id}")
+	public String updateUserToReservation(@PathVariable Long id, Authentication authentication)  {
+		return reservationService.updateUserToReservation(id, authentication);
+	}
 	
-	@DeleteMapping(path = "/{id}")
+	@PatchMapping(path = "/delete-user/{id}")
+	public String deleteUserFromReservation(@PathVariable Long id, Authentication authentication)  {
+		return reservationService.deleteUserFromReservation(id, authentication);
+	}
+	
+	@DeleteMapping(path = "/admin/{id}")
 	public String delete(@PathVariable Long id, Authentication authentication)  {
 		return reservationService.delete(id, authentication);
 	}
@@ -44,7 +49,7 @@ public class ReservationController {
 		return reservationService.getNotOccupiedReservations();
 	}
 	
-	@GetMapping("/userReservations")
+	@GetMapping("/user-reservations")
 	public List<Reservation> getAllReservationsOfUser(Authentication authentication) {
 		return reservationService.getAllReservationsOfUser(authentication);
 	}
