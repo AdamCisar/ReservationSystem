@@ -9,7 +9,7 @@ import com.store.onlinestore.entity.Reservation;
 
 public interface ReservationService {
 
-	String save(ReservationDto reservationDto);
+	void save(ReservationDto reservationDto);
 	
 	String delete(Long id, Authentication authentication);
 

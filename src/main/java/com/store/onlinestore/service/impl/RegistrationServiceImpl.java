@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 	
 	@Override
-	public String register(UserDto userDto) {
+	public void register(UserDto userDto) {
 		
 		User user = new User(
 				userDto.getFirstName(),
@@ -36,6 +36,5 @@ public class RegistrationServiceImpl implements RegistrationService {
 				Arrays.asList(roleRepository.findByName("ROLE_USER"))
 				);
 		userRepository.save(user);
-	return "success";
 	}
 }

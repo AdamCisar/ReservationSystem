@@ -3,6 +3,7 @@ package com.store.onlinestore.dto;
 import java.sql.Date;
 import java.sql.Time;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDto {
 	
-	private Long userId;
-	private Long reservationId;
+	@NotNull
     private Date reservationDate;
+	@NotNull
     private Time reservationTime;
 }

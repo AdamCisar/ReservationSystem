@@ -4,5 +4,5 @@ import com.store.onlinestore.dto.UserDto;
 
 public interface RegistrationService {
 	
-	public String register(UserDto userDto);
+	public void register(UserDto userDto);
 }

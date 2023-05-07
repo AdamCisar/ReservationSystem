@@ -27,14 +27,13 @@ public class ReservationServiceImpl implements ReservationService{
 	private UserRepository userRepository;
 	
 	@Override
-	public String save(ReservationDto reservationDto) {
+	public void save(ReservationDto reservationDto) {
 		Reservation reservation = new Reservation();
 		
 		reservation.setReservationDate(reservationDto.getReservationDate());
 		reservation.setReservationTime(reservationDto.getReservationTime());
 		
 		reservationRepository.save(reservation);
-		return "reservation created";
 	}
 
 	@Override

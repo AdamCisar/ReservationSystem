@@ -37,7 +37,7 @@ public class ReservationServiceImplTest {
 	    reservationDto.setReservationDate(new Date(1));
 	    reservationDto.setReservationTime(new Time(1));
 	    //when
-	    String result = reservationServiceImpl.save(reservationDto);
+	    reservationServiceImpl.save(reservationDto);
 	    
 	    //then
 	    ArgumentCaptor<Reservation> argCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -47,7 +47,6 @@ public class ReservationServiceImplTest {
 	    
 	    assertEquals(reservationDto.getReservationDate(), capturedReservation.getReservationDate());
 	    assertEquals(reservationDto.getReservationTime(), capturedReservation.getReservationTime());
-	    assertEquals("reservation created", result);
         
 	}
 }
