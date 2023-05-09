@@ -21,7 +21,7 @@ import com.store.onlinestore.service.impl.ReservationServiceImpl;
 public class ReservationControllerTest {
 	
     @MockBean
-    private ReservationServiceImpl reservationServiceImpl;
+	protected ReservationServiceImpl reservationServiceImpl;
     
     @Autowired
 	protected ObjectMapper objectMapper;
