@@ -35,20 +35,22 @@ public class ReservationController {
 		return new ResponseEntity<>("Reservation has been created!", HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping(path = "/admin/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id, Authentication authentication)  {
-		reservationService.delete(id, authentication);
+	@DeleteMapping(path = "{id}/admin")
+	public ResponseEntity<String> delete(@PathVariable Long id)  {
+		reservationService.delete(id);
 		return new ResponseEntity<>("Reservation has been deleted!", HttpStatus.OK);
 	}
 	
-	@PatchMapping(path = "/update-user/{id}")
-	public String updateUserToReservation(@PathVariable Long id, Authentication authentication)  {
-		return reservationService.updateUserToReservation(id, authentication);
+	@PatchMapping(path = "{reservationId}/update-user/{userId}")
+	public ResponseEntity<String> updateUserToReservation(@PathVariable Long reservationId, Long userId)  {
+		reservationService.updateUserToReservation(reservationId, userId);
+		return new ResponseEntity<>("User has been updated to reservation!", HttpStatus.OK);
 	}
 	
 	@PatchMapping(path = "/delete-user/{id}")
-	public String deleteUserFromReservation(@PathVariable Long id, Authentication authentication)  {
-		return reservationService.deleteUserFromReservation(id, authentication);
+	public ResponseEntity<String> deleteUserFromReservation(@PathVariable Long reservationId, Long userId)  {
+		reservationService.deleteUserFromReservation(reservationId, userId);
+		return new ResponseEntity<>("User has been deleted from the reservation!", HttpStatus.OK);
 	}
 	
 	@GetMapping
@@ -56,8 +58,8 @@ public class ReservationController {
 		return reservationService.getNotOccupiedReservations();
 	}
 	
-	@GetMapping("/user-reservations")
-	public List<Reservation> getAllReservationsOfUser(Authentication authentication) {
-		return reservationService.getAllReservationsOfUser(authentication);
+	@GetMapping("/user-reservations/{userId}")
+	public List<Reservation> getAllReservationsOfUser(@PathVariable Long userId) {
+		return reservationService.getAllReservationsOfUser(userId);
 	}
 }

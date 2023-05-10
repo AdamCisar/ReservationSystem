@@ -11,13 +11,13 @@ public interface ReservationService {
 
 	void save(ReservationDto reservationDto);
 	
-	String delete(Long id, Authentication authentication);
+	void delete(Long id);
 
 	List<Reservation> getNotOccupiedReservations();
 
-	List<Reservation> getAllReservationsOfUser(Authentication authentication);
+	List<Reservation> getAllReservationsOfUser(Long userId);
 
-	String updateUserToReservation(Long id, Authentication authentication);
+	void updateUserToReservation(Long id, Long userId);
 
-	String deleteUserFromReservation(Long id, Authentication authentication);
+	void deleteUserFromReservation(Long id, Long userId);
 }

@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.store.onlinestore.dto.ReservationDto;
@@ -35,59 +33,35 @@ public class ReservationServiceImpl implements ReservationService{
 		
 		reservationRepository.save(reservation);
 	}
+	
+	@Override
+	public void delete(Long id) {
+		Reservation reservation = getReservationById(id);
+		reservationRepository.delete(reservation);
+	}
 
 	@Override
-	public String updateUserToReservation(Long id, Authentication authentication) {
-		Reservation reservation = getReservationById(id);
+	public void updateUserToReservation(Long reservationId, Long userId) {
+		Reservation reservation = getReservationById(reservationId);
 
-		reservation.setUser(getCurrentUser(authentication));
+		reservation.setUser(getCurrentUser(userId));
 		reservationRepository.save(reservation);
-		
-		return "reservation updated";
 	}
 	
 	@Override
-	public String deleteUserFromReservation(Long id, Authentication authentication) {
+	public void deleteUserFromReservation(Long reservationId, Long userId) {
 		//GET CURRENT USER AND RESERVATION FROM DATABASE 
-		User currentUser = getCurrentUser(authentication);
-		Reservation reservation = getReservationById(id);
-		var userReservationId = reservation.getUser();
+		User currentUser = getCurrentUser(userId);
+		Reservation reservation = getReservationById(reservationId);
+		var userReservation = reservation.getUser();
 		//VALIDATE
-		if(!currentUser.equals(userReservationId) || userReservationId == null) {
+		if(!currentUser.equals(userReservation) || userReservation == null) {
 			throw new AccessDeniedException("You are not allowed to delete this reservation!");
 		}
 		reservation.setUser(null);
 		reservationRepository.save(reservation);
-
-		return "user is deleted from reservation";
 	}
 	
-	@Override
-	public String delete(Long id, Authentication authentication) {
-		//GET CURRENT USER AND RESERVATION FROM DATABASE 
-		User currentUser = getCurrentUser(authentication);
-		Reservation reservation = getReservationById(id);
-		
-		//CHECK IF CURRENT USER IS ADMIN
-		boolean isAdmin = currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
-		
-		//VALIDATE
-		var userReservationId = reservation.getUser();
-		
-		if(isAdmin) {
-			reservationRepository.delete(reservation);
-			return "reservation deleted";
-		}
-		
-		if(!currentUser.equals(userReservationId) || userReservationId == null) {
-			throw new AccessDeniedException("You are not allowed to delete this reservation!");
-		}
-		
-		reservationRepository.delete(reservation);
-
-		return "reservation deleted";
-	}
-
 	@Override
 	public List<Reservation> getNotOccupiedReservations() {
 		
@@ -95,9 +69,9 @@ public class ReservationServiceImpl implements ReservationService{
 	}
 
 	@Override
-	public List<Reservation> getAllReservationsOfUser(Authentication authentication) {
+	public List<Reservation> getAllReservationsOfUser(Long userId) {
 
-		return reservationRepository.findByUserId(getCurrentUser(authentication).getId()); 
+		return reservationRepository.findByUserId(userId); 
 	}
 	
 	private Reservation getReservationById(Long id) {
@@ -105,10 +79,8 @@ public class ReservationServiceImpl implements ReservationService{
 		return reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
 	}
 	
-	private User getCurrentUser(Authentication authentication) {
-		 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		 return userRepository.findByEmail(userDetails.getUsername());
+	private User getCurrentUser(Long userId) {
+		 return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 	}
 
 
