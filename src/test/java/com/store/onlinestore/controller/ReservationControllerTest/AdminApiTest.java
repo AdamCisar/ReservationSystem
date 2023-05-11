@@ -21,9 +21,6 @@ import com.store.onlinestore.dto.ReservationDto;
 
 public class AdminApiTest extends ReservationControllerTest{
 
-	@Mock
-	private Authentication authentication;
-
     @Test
     void shouldReturns403IfUnauthenticatedWhenPosting() throws Exception {
     	ReservationDto reservationDto = new ReservationDto();
@@ -39,7 +36,7 @@ public class AdminApiTest extends ReservationControllerTest{
     
     @Test
     void shouldReturns403IfUnauthenticatedWhenDeleting() throws Exception {
-    	mockMvc.perform(delete("/api/reservation/admin/{id}",1)
+    	mockMvc.perform(delete("/api/reservation/admin/{id}",1L)
     			.with(csrf()))
                 .andExpect(status().is3xxRedirection());
     }
@@ -47,7 +44,7 @@ public class AdminApiTest extends ReservationControllerTest{
 
     @Test
     @WithMockUser
-    void shouldReturns403IfUserWhenPosting() throws Exception {
+    void shouldReturns403IfUserPosting() throws Exception {
     	ReservationDto reservationDto = new ReservationDto();
    	    reservationDto.setReservationDate(new Date(1));
    	    reservationDto.setReservationTime(new Time(1));
@@ -61,8 +58,8 @@ public class AdminApiTest extends ReservationControllerTest{
     
     @Test
     @WithMockUser
-    void shouldReturns403IfUserdDeleting() throws Exception {
-    	mockMvc.perform(delete("/api/reservation/admin/{id}",1)
+    void shouldReturns403IfUserDeleting() throws Exception {
+    	mockMvc.perform(delete("/api/reservation/admin/{id}", 1L)
     			.with(csrf()))
                 .andExpect(status().isForbidden());
     }
@@ -99,22 +96,19 @@ public class AdminApiTest extends ReservationControllerTest{
     @WithMockUser(roles = "ADMIN")
     void shouldReturns200IfAdminDeleting_And_MapsToServiceLayer_And_ReturnsResponse() throws Exception {
     	//status code 200
-    	MvcResult mvcResult = mockMvc.perform(delete("/api/reservation/admin/{id}",1)
+    	MvcResult mvcResult = mockMvc.perform(delete("/api/reservation/admin/{id}",1L)
     			.with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
     	
     	 //Maping to service
    	 	ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
-   	 	ArgumentCaptor<Authentication> authenticationCaptor = ArgumentCaptor.forClass(Authentication.class);
-        verify(reservationServiceImpl).delete(idCaptor.capture(), authenticationCaptor.capture());
+        verify(reservationServiceImpl).delete(idCaptor.capture());
         
        
         Long capturedId = idCaptor.getValue();
-        Authentication capturedAuthentication = authenticationCaptor.getValue();
         
         assertThat(idCaptor.getValue()).isEqualTo(capturedId);
-        assertThat(authenticationCaptor.getValue()).isEqualTo(capturedAuthentication);
        
         //Response
         String actualResponseBody = mvcResult.getResponse().getContentAsString();

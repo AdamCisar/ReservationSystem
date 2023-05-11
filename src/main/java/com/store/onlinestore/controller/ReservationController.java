@@ -35,20 +35,20 @@ public class ReservationController {
 		return new ResponseEntity<>("Reservation has been created!", HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping(path = "{id}/admin")
+	@DeleteMapping(path = "/admin/{id}")
 	public ResponseEntity<String> delete(@PathVariable Long id)  {
 		reservationService.delete(id);
 		return new ResponseEntity<>("Reservation has been deleted!", HttpStatus.OK);
 	}
 	
-	@PatchMapping(path = "{reservationId}/update-user/{userId}")
-	public ResponseEntity<String> updateUserToReservation(@PathVariable Long reservationId, Long userId)  {
+	@PatchMapping(path = "/{reservationId}/update-user/{userId}")
+	public ResponseEntity<String> updateUserToReservation(@PathVariable Long reservationId, @PathVariable Long userId)  {
 		reservationService.updateUserToReservation(reservationId, userId);
 		return new ResponseEntity<>("User has been updated to reservation!", HttpStatus.OK);
 	}
 	
-	@PatchMapping(path = "/delete-user/{id}")
-	public ResponseEntity<String> deleteUserFromReservation(@PathVariable Long reservationId, Long userId)  {
+	@PatchMapping(path = "/{reservationId}/delete-user/{userId}")
+	public ResponseEntity<String> deleteUserFromReservation(@PathVariable Long reservationId, @PathVariable Long userId)  {
 		reservationService.deleteUserFromReservation(reservationId, userId);
 		return new ResponseEntity<>("User has been deleted from the reservation!", HttpStatus.OK);
 	}
