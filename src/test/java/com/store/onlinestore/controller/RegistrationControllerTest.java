@@ -22,7 +22,7 @@ import com.store.onlinestore.dto.UserDto;
 import com.store.onlinestore.service.impl.RegistrationServiceImpl;
 
 
-@WebMvcTest(RegistrationController.class)
+@WebMvcTest(AuthController.class)
 public class RegistrationControllerTest {
 	
     @MockBean

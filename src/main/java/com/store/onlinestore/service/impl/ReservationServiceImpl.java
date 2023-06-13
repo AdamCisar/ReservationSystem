@@ -29,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public void save(ReservationDto reservationDto) {
 		Reservation reservation = new Reservation();
-
+		
 		reservation.setReservationDate(reservationDto.getReservationDate());
 		reservation.setReservationTime(reservationDto.getReservationTime());
 
@@ -77,6 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 		return reservationRepository.findAll().stream().filter(reservation -> reservation.getUser() == null)
 				.collect(Collectors.toList());
+		
 	}
 
 	@Override
