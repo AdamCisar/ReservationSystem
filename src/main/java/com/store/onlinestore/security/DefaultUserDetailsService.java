@@ -22,7 +22,7 @@ import com.store.onlinestore.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
-@Service("userDetailsService")
+@Service
 @Transactional
 public class DefaultUserDetailsService implements UserDetailsService {
 

@@ -1,29 +1,58 @@
 package com.store.onlinestore.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.store.onlinestore.repository.UserRepository;
+import com.store.onlinestore.security.AuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableWebMvc
 public class WebSecurityConfig implements WebMvcConfigurer{
 	
+	@Autowired
+	private AuthenticationFilter authenticationFilter;
+	@Autowired
+	private UserRepository repository;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	 @Bean
+	  public UserDetailsService userDetailsService() {
+	    return username -> repository.findByEmail(username);
+	  }
+	
+	 @Bean
+	 public AuthenticationProvider authenticationProvider() {
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userDetailsService());
+	    authProvider.setPasswordEncoder(passwordEncoder());
+	    return authProvider;
+	  }
+	 
 	@Bean
 	public RoleHierarchy roleHierarchy() {
 	    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -54,11 +83,17 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 		        .hasRole("ADMIN")
 		        .requestMatchers("api/reservation/**")
 		        .hasAnyRole("USER", "ADMIN")
-		        .requestMatchers("/api/register")
+		        .requestMatchers("/api/register", "/api/login")
 		        .permitAll()
 		        .anyRequest()
-		        .authenticated();
-	    	
+		        .authenticated()
+		     .and()
+	        	.sessionManagement()
+	        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	         .and()
+			      .authenticationProvider(authenticationProvider())
+			      .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+			    	
 		 
 	    return http.build();
 	}

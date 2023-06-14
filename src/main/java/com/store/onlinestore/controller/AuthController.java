@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.store.onlinestore.dto.AuthenticationResponse;
 import com.store.onlinestore.dto.LoginDto;
 import com.store.onlinestore.dto.UserDto;
-import com.store.onlinestore.service.RegistrationService;
+import com.store.onlinestore.service.AuthenticationService;
 
 import jakarta.validation.Valid;
 
@@ -25,23 +26,16 @@ import jakarta.validation.Valid;
 public class AuthController {
 	
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-	private RegistrationService registrationService;
+	private AuthenticationService authService;
 	
 	@PostMapping(path = "/register")
-	public ResponseEntity<String> register(@Valid @RequestBody UserDto userDto) {
-		registrationService.register(userDto);
-		return new ResponseEntity<>("User registration successful!", HttpStatus.CREATED);
+	public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody UserDto userDto) {
+		return ResponseEntity.ok(authService.register(userDto));
 	}
 	
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getEmail(), loginDto.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+    public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody LoginDto loginDto){
+        return ResponseEntity.ok(authService.authenticate(loginDto));
     }
 	
 }
