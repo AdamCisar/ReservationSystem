@@ -2,9 +2,8 @@ package com.store.onlinestore.service;
 
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
-
 import com.store.onlinestore.dto.ReservationDto;
+import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;
 
 public interface ReservationService {
@@ -13,7 +12,7 @@ public interface ReservationService {
 	
 	void delete(Long id);
 
-	List<Reservation> getNotOccupiedReservations();
+	List<ReservationDtoResponse> getNotOccupiedReservations();
 
 	List<Reservation> getAllReservationsOfUser(Long userId);
 

@@ -1,6 +1,10 @@
 package com.store.onlinestore.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +15,9 @@ import org.springframework.stereotype.Service;
 import com.store.onlinestore.dto.AuthenticationResponse;
 import com.store.onlinestore.dto.LoginDto;
 import com.store.onlinestore.dto.UserDto;
-import com.store.onlinestore.entity.Token;
+import com.store.onlinestore.entity.Role;
 import com.store.onlinestore.entity.User;
 import com.store.onlinestore.repository.RoleRepository;
-import com.store.onlinestore.repository.TokenRepository;
 import com.store.onlinestore.repository.UserRepository;
 import com.store.onlinestore.security.TokenService;
 import com.store.onlinestore.service.AuthenticationService;
@@ -32,25 +35,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private TokenService tokenService;
-	@Autowired
-	private TokenRepository tokenRepository;
 
 	@Override
 	public AuthenticationResponse register(UserDto userDto) {
+		Collection<Role> roles = Arrays.asList(roleRepository.findByName("ROLE_USER"));
+		
 		var user = User.builder()
 				.firstName(userDto.getFirstName())
 				.lastName(userDto.getLastName())
 				.email(userDto.getEmail())
 				.password(passwordEncoder.encode(userDto.getPassword()))
 				.enabled(true)
-				.roles(Arrays.asList(roleRepository.findByName("ROLE_USER")))
+				.roles(roles)
 				.build();
 		
-		var savedUser = userRepository.save(user);
-		var jwtToken = tokenService.generateToken(user);
-		saveUserToken(savedUser, jwtToken);
+		userRepository.save(user);
+		var jwtToken = tokenService.generateToken(user, getRole(roles));
 		return AuthenticationResponse.builder()
-		        .accessToken(jwtToken)
+		        .token(jwtToken)
 		        .build();
 			
 	}
@@ -64,22 +66,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	        )
 	    );
 	    var user = userRepository.findByEmail(loginDto.getEmail());
-	    var jwtToken = tokenService.generateToken(user);
-	    
+	    var jwtToken = tokenService.generateToken(user, getRole(user.getRoles()));
 	    return AuthenticationResponse.builder()
-	        .accessToken(jwtToken)
+	        .token(jwtToken)
 	        .build();
 	  }
 	
-	 private void saveUserToken(User user, String jwtToken) {
-		    var token = Token.builder()
-		        .user(user)
-		        .token(jwtToken)
-		        .tokenType("BEARER")
-		        .expired(false)
-		        .revoked(false)
-		        .build();
-		    tokenRepository.save(token);
-		  }
+	 private Map<String, Object> getRole(Collection<Role> roles) {
+		 ArrayList<Role> newList = new ArrayList<>(roles);
+		 String role = newList.get(0).getName();
+		 
+		 Map<String, Object> claims = new HashMap<>();
+		 claims.put("roles", role);
+		 return claims;
+	 }
 	
 }

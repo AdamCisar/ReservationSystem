@@ -20,7 +20,7 @@ import com.store.onlinestore.service.AuthenticationService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/api")
 @RestController
 public class AuthController {

@@ -3,7 +3,8 @@ package com.store.onlinestore.dto;
 import java.sql.Date;
 import java.sql.Time;
 
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationDtoResponse {
 	
-    private String reservationDate;
-    private Time reservationTime;
+	private Long id;
+	@JsonProperty("date")
+    private Date date;
+	@JsonProperty("time")
+    private Time time;
 }

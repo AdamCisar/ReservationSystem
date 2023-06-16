@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.onlinestore.dto.ReservationDto;
+import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;
 import com.store.onlinestore.service.ReservationService;
 
 import jakarta.validation.Valid;
- 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/api/reservation")
 @RestController
 public class ReservationController {
@@ -54,7 +54,7 @@ public class ReservationController {
 	}
 	
 	@GetMapping
-	public List<Reservation> getNotOccupiedReservations() {
+	public List<ReservationDtoResponse> getNotOccupiedReservations() {
 		return reservationService.getNotOccupiedReservations();
 	}
 	

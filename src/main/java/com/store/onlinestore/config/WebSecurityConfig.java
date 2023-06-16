@@ -1,8 +1,11 @@
 package com.store.onlinestore.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,17 +16,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.store.onlinestore.repository.UserRepository;
 import com.store.onlinestore.security.AuthenticationFilter;
+
+import io.jsonwebtoken.Jwt;
 
 @Configuration
 @EnableWebSecurity
@@ -73,6 +80,21 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	                                 AuthenticationConfiguration configuration) throws Exception {
 	        return configuration.getAuthenticationManager();
      }
+	 
+	 @Bean
+	 CorsConfigurationSource corsConfigurationSource() {
+	        CorsConfiguration configuration = new CorsConfiguration();
+	        configuration.setAllowedMethods(List.of(
+	                HttpMethod.GET.name(),
+	                HttpMethod.PUT.name(),
+	                HttpMethod.POST.name(),
+	                HttpMethod.DELETE.name()
+	        ));
+
+	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
+	        return source;
+	    }
 	
 	@Bean
 	protected DefaultSecurityFilterChain config(HttpSecurity http) throws Exception {
@@ -81,19 +103,22 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        .authorizeHttpRequests()
 		        .requestMatchers("/api/reservation/admin/**")
 		        .hasRole("ADMIN")
-		        .requestMatchers("api/reservation/**")
+		        .requestMatchers("api/reservation")
 		        .hasAnyRole("USER", "ADMIN")
 		        .requestMatchers("/api/register", "/api/login")
 		        .permitAll()
 		        .anyRequest()
 		        .authenticated()
+	        .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
 		     .and()
 	        	.sessionManagement()
 	        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	         .and()
 			      .authenticationProvider(authenticationProvider())
 			      .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-			    	
+		    
 		 
 	    return http.build();
 	}

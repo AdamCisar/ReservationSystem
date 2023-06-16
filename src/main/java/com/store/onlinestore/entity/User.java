@@ -46,9 +46,6 @@ public class User implements UserDetails{
     @NotBlank
     private String password;
     private boolean enabled;
-    
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
 
     @ManyToMany 
     @JoinTable( 

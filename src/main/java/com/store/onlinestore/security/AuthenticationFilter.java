@@ -35,7 +35,7 @@ public class AuthenticationFilter extends OncePerRequestFilter{
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
+	
 		jwt = authHeader.substring(7);
 		userEmail = tokenService.extractUsername(jwt);
 		

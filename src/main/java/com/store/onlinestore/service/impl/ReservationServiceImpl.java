@@ -2,6 +2,7 @@ package com.store.onlinestore.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.store.onlinestore.dto.ReservationDto;
+import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;
 import com.store.onlinestore.entity.User;
 import com.store.onlinestore.repository.ReservationRepository;
@@ -73,10 +75,12 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public List<Reservation> getNotOccupiedReservations() {
+	public List<ReservationDtoResponse> getNotOccupiedReservations() {
 
-		return reservationRepository.findAll().stream().filter(reservation -> reservation.getUser() == null)
+		List<Reservation> reservations = reservationRepository.findAll().stream().filter(reservation -> reservation.getUser() == null)
 				.collect(Collectors.toList());
+		List<ReservationDtoResponse> response = reservations.stream().map(res -> new ReservationDtoResponse(res.getId(), res.getReservationDate(), res.getReservationTime())).collect(Collectors.toList());
+		return response;
 		
 	}
 

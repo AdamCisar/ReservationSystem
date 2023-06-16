@@ -33,10 +33,9 @@ public class TokenService {
 		return claimsResolver.apply(claims);
 	}
 	
-	public String generateToken(UserDetails userDetails) {
-		Map<String, Object> claims = new HashMap<>();
+	public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
 		return Jwts.builder()
-				.setClaims(claims)
+				.setClaims(extraClaims)
 				.setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
