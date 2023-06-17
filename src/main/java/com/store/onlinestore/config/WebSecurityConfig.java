@@ -69,7 +69,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	}
 	
 	@Bean
-	public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+	public DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler() {
 	    DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
 	    expressionHandler.setRoleHierarchy(roleHierarchy());
 	    return expressionHandler;
@@ -87,6 +87,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        configuration.setAllowedMethods(List.of(
 	                HttpMethod.GET.name(),
 	                HttpMethod.PUT.name(),
+	                HttpMethod.PATCH.name(),
 	                HttpMethod.POST.name(),
 	                HttpMethod.DELETE.name()
 	        ));

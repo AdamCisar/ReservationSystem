@@ -1,7 +1,8 @@
 package com.store.onlinestore.security;
 
+import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -33,9 +34,10 @@ public class TokenService {
 		return claimsResolver.apply(claims);
 	}
 	
-	public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
+	public String generateToken(UserDetails userDetails, Map<String, ArrayList<String>> extraClaims, String id) {
 		return Jwts.builder()
 				.setClaims(extraClaims)
+				.claim("id", id)
 				.setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))

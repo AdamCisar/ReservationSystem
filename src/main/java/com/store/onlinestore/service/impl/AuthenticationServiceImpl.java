@@ -3,6 +3,7 @@ package com.store.onlinestore.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				.build();
 		
 		userRepository.save(user);
-		var jwtToken = tokenService.generateToken(user, getRole(roles));
+		var jwtToken = tokenService.generateToken(user, getRole(roles), user.getId().toString());
 		return AuthenticationResponse.builder()
 		        .token(jwtToken)
 		        .build();
@@ -66,18 +67,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	        )
 	    );
 	    var user = userRepository.findByEmail(loginDto.getEmail());
-	    var jwtToken = tokenService.generateToken(user, getRole(user.getRoles()));
+	    var jwtToken = tokenService.generateToken(user, getRole(user.getRoles()), user.getId().toString());
 	    return AuthenticationResponse.builder()
 	        .token(jwtToken)
 	        .build();
 	  }
 	
-	 private Map<String, Object> getRole(Collection<Role> roles) {
-		 ArrayList<Role> newList = new ArrayList<>(roles);
-		 String role = newList.get(0).getName();
+	 private Map<String, ArrayList<String>> getRole(Collection<Role> roles) {
+		 ArrayList<String> newRoles = new ArrayList<>(roles.size());
+
+        for (Role role : roles) {
+            newRoles.add(role.getName());
+        }
 		 
-		 Map<String, Object> claims = new HashMap<>();
-		 claims.put("roles", role);
+		 Map<String, ArrayList<String>> claims = new HashMap<>();
+		 claims.put("roles", newRoles);
 		 return claims;
 	 }
 	
