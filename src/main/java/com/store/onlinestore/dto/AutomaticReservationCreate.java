@@ -1,7 +1,6 @@
 package com.store.onlinestore.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDto {
-	
+public class AutomaticReservationCreate {
+		
 	@NotNull
-    private LocalDate reservationDate;
+    private LocalDate reservationFrom;
 	@NotNull
-    private LocalTime reservationTime;
+    private LocalDate reservationTo;
 }

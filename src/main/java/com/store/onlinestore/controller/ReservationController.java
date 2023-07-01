@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.store.onlinestore.dto.AutomaticReservationCreate;
 import com.store.onlinestore.dto.ReservationDto;
 import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;
@@ -39,6 +40,12 @@ public class ReservationController {
 	public ResponseEntity<String> delete(@PathVariable Long id)  {
 		reservationService.delete(id);
 		return new ResponseEntity<>("Reservation has been deleted!", HttpStatus.OK);
+	}
+	
+	@PostMapping("/admin/create-reservations")
+	public ResponseEntity<String> getAllReservationsOfUser(@Valid @RequestBody AutomaticReservationCreate automaticReservationCreate) {
+		reservationService.createReservation(automaticReservationCreate);
+		return new ResponseEntity<>("Reservations have been created!", HttpStatus.CREATED);
 	}
 	
 	@PatchMapping(path = "/{reservationId}/update-user/{userId}")

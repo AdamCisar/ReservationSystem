@@ -1,7 +1,5 @@
 package com.store.onlinestore.entity;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -26,18 +24,23 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date reservationDate;
-    private Time reservationTime;
+    private LocalDate reservationDate;
+    private LocalTime reservationTime;
 
 	@ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
 
-    public Reservation(Date reservationDate, Time reservationTime, User user) {
+    public Reservation(LocalDate reservationDate, LocalTime reservationTime, User user) {
 		this.reservationDate = reservationDate;
 		this.reservationTime = reservationTime;
 		this.user = user;
+	}
+
+	public Reservation(LocalDate reservationDate, LocalTime reservationTime) {
+		this.reservationDate = reservationDate;
+		this.reservationTime = reservationTime;
 	}
 	    
 }

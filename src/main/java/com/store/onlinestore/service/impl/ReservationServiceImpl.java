@@ -1,8 +1,11 @@
 package com.store.onlinestore.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.store.onlinestore.dto.AutomaticReservationCreate;
 import com.store.onlinestore.dto.ReservationDto;
 import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;
@@ -19,6 +23,7 @@ import com.store.onlinestore.repository.UserRepository;
 import com.store.onlinestore.service.ReservationService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -113,4 +118,36 @@ public class ReservationServiceImpl implements ReservationService {
 		return userRepository.findByEmail(userEmail);
 	}
 
+	@Override
+	public void createReservation(@Valid AutomaticReservationCreate automaticReservationCreate) {
+	    
+        LocalDate startDate = automaticReservationCreate.getReservationFrom();
+        LocalDate endDate = automaticReservationCreate.getReservationTo();
+
+        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(16, 30);
+
+        // Generate reservations for each day within the range
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            generateReservationsForDay(currentDate, startTime, endTime);
+            currentDate = currentDate.plusDays(1);
+        }
+    }
+
+    public void generateReservationsForDay(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        LocalDateTime currentDateTime = LocalDateTime.of(date, startTime);
+
+        // Iterate over the time slots for the day
+        while (!currentDateTime.toLocalTime().isAfter(endTime)) {
+            if (!(currentDateTime.toLocalTime().equals(LocalTime.of(11, 30))
+                    || (currentDateTime.toLocalTime().isAfter(LocalTime.of(11, 30))
+                            && currentDateTime.toLocalTime().isBefore(LocalTime.of(12, 30))))) {
+                Reservation reservation = new Reservation(currentDateTime.toLocalDate(), currentDateTime.toLocalTime());
+                reservationRepository.save(reservation);
+            }
+
+            currentDateTime = currentDateTime.plusMinutes(30);
+        }
+    }
 }

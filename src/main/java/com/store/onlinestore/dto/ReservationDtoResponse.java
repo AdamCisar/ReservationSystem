@@ -1,7 +1,7 @@
 package com.store.onlinestore.dto;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,7 +16,7 @@ public class ReservationDtoResponse {
 	
 	private Long id;
 	@JsonProperty("date")
-    private Date date;
+    private LocalDate date;
 	@JsonProperty("time")
-    private Time time;
+    private LocalTime time;
 }
