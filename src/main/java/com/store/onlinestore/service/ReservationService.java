@@ -3,7 +3,6 @@ package com.store.onlinestore.service;
 import java.util.List;
 
 import com.store.onlinestore.dto.AutomaticReservationCreate;
-import com.store.onlinestore.dto.CreateReservation;
 import com.store.onlinestore.dto.ReservationDto;
 import com.store.onlinestore.dto.ReservationDtoResponse;
 import com.store.onlinestore.entity.Reservation;

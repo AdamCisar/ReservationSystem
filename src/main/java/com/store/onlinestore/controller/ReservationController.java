@@ -43,7 +43,7 @@ public class ReservationController {
 	}
 	
 	@PostMapping("/admin/create-reservations")
-	public ResponseEntity<String> getAllReservationsOfUser(@Valid @RequestBody AutomaticReservationCreate automaticReservationCreate) {
+	public ResponseEntity<String> createReservations(@Valid @RequestBody AutomaticReservationCreate automaticReservationCreate) {
 		reservationService.createReservation(automaticReservationCreate);
 		return new ResponseEntity<>("Reservations have been created!", HttpStatus.CREATED);
 	}
