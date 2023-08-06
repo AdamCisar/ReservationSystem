@@ -10,6 +10,7 @@ com\store\onlinestore\dto\ReservationDtoResponse.class
 com\store\onlinestore\security\SetupDataLoader.class
 com\store\onlinestore\entity\User.class
 com\store\onlinestore\entity\Reservation.class
+com\store\onlinestore\config\CorsConfig.class
 com\store\onlinestore\dto\AutomaticReservationCreate.class
 com\store\onlinestore\entity\Role.class
 com\store\onlinestore\service\ReservationService.class

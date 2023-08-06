@@ -96,19 +96,6 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 //	        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
 //	        return source;
 //	    }
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("https://cute-cobbler-7a8154.netlify.app"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
-		configuration.setAllowCredentials(true);
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Requestor-Type"));
-		configuration.setExposedHeaders(Arrays.asList("X-Get-Header"));
-		configuration.setMaxAge(3600L);
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
 
 	@Bean
 	protected DefaultSecurityFilterChain config(HttpSecurity http) throws Exception {
@@ -117,7 +104,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        .authorizeHttpRequests()
 		        .requestMatchers("/api/reservation/admin/**")
 		        .hasRole("ADMIN")
-		        .requestMatchers("api/reservation")
+		        .requestMatchers("/api/reservation")
 		        .hasAnyRole("USER", "ADMIN")
 		        .requestMatchers("/api/register", "/api/login")
 		        .permitAll()
@@ -125,7 +112,6 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 		        .authenticated()
 	        .and()
                 .cors()
-                .configurationSource(corsConfigurationSource())
 		     .and()
 	        	.sessionManagement()
 	        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
