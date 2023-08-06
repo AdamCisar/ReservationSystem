@@ -23,10 +23,8 @@ import com.store.onlinestore.service.ReservationService;
 
 import jakarta.validation.Valid;
 @CrossOrigin(
-		origins = {
-				"http://localhost:3000",
+		origins =
 				"https://cute-cobbler-7a8154.netlify.app",
-		},
 		allowCredentials = "true"
 )
 @RequestMapping("/api/reservation")
