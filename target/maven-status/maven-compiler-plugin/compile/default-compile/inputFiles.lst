@@ -14,7 +14,6 @@ C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlines
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\entity\Privilege.java
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\dto\AutomaticReservationCreate.java
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\OnlinestoreApplication.java
-C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\config\CorsConfig.java
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\dto\AuthenticationResponse.java
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\entity\Reservation.java
 C:\Users\Adam\Desktop\backend-reservation-system\src\main\java\com\store\onlinestore\repository\RoleRepository.java

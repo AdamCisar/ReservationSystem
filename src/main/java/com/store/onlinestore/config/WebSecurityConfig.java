@@ -1,11 +1,11 @@
 package com.store.onlinestore.config;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.store.onlinestore.repository.UserRepository;
+import com.store.onlinestore.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,10 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.store.onlinestore.repository.UserRepository;
-import com.store.onlinestore.security.AuthenticationFilter;
-
-import io.jsonwebtoken.Jwt;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -81,21 +78,21 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        return configuration.getAuthenticationManager();
      }
 	 
-//	 @Bean
-//	 CorsConfigurationSource corsConfigurationSource() {
-//	        CorsConfiguration configuration = new CorsConfiguration();
-//	        configuration.setAllowedMethods(List.of(
-//	                HttpMethod.GET.name(),
-//	                HttpMethod.PUT.name(),
-//	                HttpMethod.PATCH.name(),
-//	                HttpMethod.POST.name(),
-//	                HttpMethod.DELETE.name()
-//	        ));
-//
-//	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//	        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
-//	        return source;
-//	    }
+	 @Bean
+	 CorsConfigurationSource corsConfigurationSource() {
+	        CorsConfiguration configuration = new CorsConfiguration();
+	        configuration.setAllowedMethods(List.of(
+	                HttpMethod.GET.name(),
+	                HttpMethod.PUT.name(),
+	                HttpMethod.PATCH.name(),
+	                HttpMethod.POST.name(),
+	                HttpMethod.DELETE.name()
+	        ));
+
+	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
+	        return source;
+	    }
 
 	@Bean
 	protected DefaultSecurityFilterChain config(HttpSecurity http) throws Exception {
