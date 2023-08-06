@@ -96,7 +96,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
 	        return source;
 	    }
-	
+
 	@Bean
 	protected DefaultSecurityFilterChain config(HttpSecurity http) throws Exception {
 	    http.csrf()
