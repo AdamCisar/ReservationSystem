@@ -20,11 +20,6 @@ import com.store.onlinestore.service.AuthenticationService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(
-        origins =
-                "https://cute-cobbler-7a8154.netlify.app",
-        allowCredentials = "true"
-)
 @RequestMapping("/api")
 @RestController
 public class AuthController {
